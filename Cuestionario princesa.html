@@ -1,0 +1,540 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cuestionario para la princesita</title>
+    <style>
+        :root {
+            --primary-color: #ff758f;
+            --primary-hover: #ff4d6d;
+            --secondary-color: #7209b7;
+            --bg-gradient: linear-gradient(135deg, #ffafcc 0%, #b5e2fa 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --text-main: #2b2d42;
+            --text-muted: #6c757d;
+            --correct-color: #4c9a2a;
+            --correct-bg: #e8f5e9;
+            --incorrect-color: #d90429;
+            --incorrect-bg: #ffe5ec;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            color: var(--text-main);
+        }
+
+        .container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 700px; 
+            border-radius: 20px;
+            padding: 30px 20px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            margin: auto;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Portada */
+        .cover-title {
+            font-size: 2.3rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .cover-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        /* Barra de Progreso */
+        .progress-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            height: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .score-live {
+            background: #f0f3fa;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: var(--secondary-color);
+        }
+
+        /* Preguntas */
+        .question-text {
+            font-size: 1.25rem; 
+            margin-bottom: 25px;
+            text-align: left;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 15px 18px; 
+            text-align: left;
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem; 
+            cursor: pointer;
+            color: var(--text-main);
+            outline: none;
+            display: block;
+            line-height: 1.4;
+        }
+
+        /* Estados de validación */
+        .option-btn.correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-color) !important;
+            color: var(--correct-color) !important;
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-color) !important;
+            color: var(--incorrect-color) !important;
+        }
+
+        /* Botones */
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 117, 143, 0.3);
+            display: inline-block;
+            width: auto;
+        }
+
+        #next-btn {
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Pantalla Final */
+        .results-title {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+
+        .final-score-container {
+            margin: 20px 0;
+        }
+
+        .score-big {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        .feedback-message {
+            font-size: 1.15rem;
+            margin-bottom: 25px;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        /* Pantallas pequeñas */
+        @media (max-width: 480px) {
+            body {
+                align-items: flex-start;
+            }
+            .container {
+                padding: 20px 15px;
+                border-radius: 16px;
+            }
+            .cover-title {
+                font-size: 1.8rem;
+            }
+            .question-text {
+                font-size: 1.1rem;
+            }
+            .option-btn {
+                padding: 12px 14px;
+                font-size: 0.95rem;
+            }
+            .action-btn {
+                width: 100%;
+                padding: 14px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div id="cover-screen" class="screen active">
+            <h1 class="cover-title">Cuestionario para la princesita</h1>
+            <p class="cover-subtitle">Un rincón especial para repasar y repasar los contenidos del examen de Turismo 2025. ¡A por el aprobado con nota!</p>
+            <button class="action-btn" onclick="startQuiz()">Comenzar examen</button>
+        </div>
+
+        <div id="quiz-screen" class="screen">
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            <div class="quiz-header">
+                <span id="question-number">Pregunta 1 de 35</span>
+                <span class="score-live">Puntos: <span id="live-score">0</span></span>
+            </div>
+            <div id="question-text" class="question-text">Pregunta</div>
+            <div class="options-list" id="options-container"></div>
+            <button id="next-btn" class="action-btn" onclick="nextQuestion()">Siguiente pregunta</button>
+        </div>
+
+        <div id="results-screen" class="screen">
+            <h1 class="results-title">¡Cuestionario Completado!</h1>
+            <div class="final-score-container">
+                <div class="score-big"><span id="final-score">0</span> / 35</div>
+                <p id="percentage-text" style="font-weight: 600; color: var(--text-muted); margin-top: 5px;"></p>
+            </div>
+            <p id="feedback-message" class="feedback-message">Mensaje</p>
+            <button class="action-btn" onclick="restartQuiz()">Volver a intentar</button>
+        </div>
+
+    </div>
+
+    <script>
+        var quizData = [
+            {
+                q: "1. El componente más importante de la animación es:",
+                options: ["a. La persona agente que realiza la actividad.", "b. La socialización.", "c. La integración.", "d. El descubrimiento."],
+                correct: 0
+            },
+            {
+                q: "2. La Animación Turística como tal tiene sus inicios:",
+                options: ["a. Después de la Primera Guerra Mundial.", "b. A principios del siglo XIX.", "c. Gracias a Gérard Blitz.", "d. Las opciones a y c son correctas."],
+                correct: 2
+            },
+            {
+                q: "3. En el Club Méditerranée:",
+                options: ["a. Los animadores eran profesionales autónomos.", "b. Eran conocidos como gentle organiseurs.", "c. Eran conocidos como gentle members.", "d. No percibían salario por sus servicios."],
+                correct: 1
+            },
+            {
+                q: "4. Las Nuevas Tendencias en Animación Turística:",
+                options: ["a. Se limitan al campo de las Nuevas Tecnologías.", "b. La Animación no está afectada por las Nuevas Tendencias.", "c. Abarcan al personal, las actividades, los clientes, etc.", "d. Ninguna de las opciones anteriores es correcta."],
+                correct: 2
+            },
+            {
+                q: "5. La función social de la Animación Turística:",
+                options: ["a. Se encarga de integrar al turista en el medio social en el que se encuentra.", "b. Relaciona al turista con asociaciones de la zona.", "c. Interfiere con el resto de las funciones de la Animación.", "d. Todas las opciones son correctas."],
+                correct: 0
+            },
+            {
+                q: "6. El animador turístico:",
+                options: ["a. Debe llevar a cabo las actividades desde su preparación a su conclusión.", "b. Solo tiene que ejecutar las actividades, de la preparación se ocupará el jefe de animación.", "c. No maneja aparatos electrónicos, ya que se necesita una preparación especial.", "d. No debe participar en las actividades preparadas como jugador o miembro del elenco."],
+                correct: 0
+            },
+            {
+                q: "7. Con respecto a la función social del animador, se podría afirmar que:",
+                options: ["a. Si el animador no actuara, los huéspedes no interactuarían entre sí.", "b. Sin el animador, las relaciones sociales serían las mismas pero se darían más lentamente.", "c. Sin el animador, las relaciones sociales serían menos enriquecedoras.", "d. Las relaciones públicas forman parte de la función social."],
+                correct: 2
+            },
+            {
+                q: "8. La animación turística se puede dar:",
+                options: ["a. En cualquier entorno.", "b. En un entorno turístico.", "c. En un entorno educativo y turístico.", "d. En cualquier entorno siempre que el agente sea un animador turístico."],
+                correct: 1
+            },
+            {
+                q: "9. Un animador turístico:",
+                options: ["a. Planifica el programa de animación del Hotel.", "b. Lleva a cabo las actividades recreativas de su establecimiento hostelero.", "c. Controla la calidad de las actividades realizadas.", "d. Todas las opciones son correctas."],
+                correct: 3
+            },
+            {
+                q: "10. Señala cuál de las siguientes afirmaciones es verdadera:",
+                options: ["a. El animador multifuncional se especializa en un tipo de público.", "b. El animador artista conoce y utiliza los medios audiovisuales.", "c. Los animadores infantiles se especializan en programas para niños.", "d. Los animadores técnicos son actores, cantantes, coreógrafos o bailarines."],
+                correct: 2
+            },
+            {
+                q: "11. La medida de la calidad:",
+                options: ["a. Es objetiva.", "b. La decide el prestador de servicios.", "c. La decide el cliente.", "d. La decide el sector."],
+                correct: 2
+            },
+            {
+                q: "12. Para implantar un Sistema de Calidad Total:",
+                options: ["a. Necesitamos que se involucren todos los miembros de la empresa.", "b. Nos ceñimos a un periodo de tiempo concreto.", "c. Nos fijaremos en lo que hacen otras empresas y haremos lo mismo.", "d. La colaboración de dirección será necesaria al final del proceso."],
+                correct: 0
+            },
+            {
+                q: "13. El ciclo PDCA significa:",
+                options: ["a. Poder Decidir Calidad Alta.", "b. Planear Comenzar Decidir Alcanzar.", "c. Planificar Hacer Verificar Actuar.", "d. Plantear Decisiones Realizar Acciones."],
+                correct: 2
+            },
+            {
+                q: "14. El manual de calidad es:",
+                options: ["a. Específico para cada empresa.", "b. Específico para cada sector.", "c. Específico para cada país.", "d. Específico para cada departamento de una empresa."],
+                correct: 0
+            },
+            {
+                q: "15. Los datos de una encuesta:",
+                options: ["a. Nos permiten comparar los resultados de una empresa.", "b. No sirven si no se los pasamos a los mismos clientes.", "c. Nos indican los cambios y modificaciones que debemos hacer.", "d. Las opciones a y c son correctas."],
+                correct: 3
+            },
+            {
+                q: "16. ¿Cuál es la principal diferencia entre una Ley y un Decreto?",
+                options: ["a. Las leyes son aprobadas por el poder ejecutivo, mientras que los decretos son aprobados por el poder legislativo.", "b. Las leyes requieren un proceso legislativo completo, mientras que los decretos pueden ser aprobados directamente por el Gobierno.", "c. Los decretos tienen un ámbito de aplicación más amplio que las leyes.", "d. Las leyes son específicas y se utilizan para desarrollar o complementar los decretos."],
+                correct: 1
+            },
+            {
+                q: "17. ¿Qué tipo de mayoría se requiere para aprobar una Ley Orgánica en España?",
+                options: ["a. Mayoría simple.", "b. Mayoría absoluta.", "c. Mayoría relativa.", "d. Mayoría cualificada."],
+                correct: 1
+            },
+            {
+                q: "18. ¿Cuál es el objetivo principal de la Directiva Bolkestein (Directiva 2006/123/CE)?",
+                options: ["a. Regular el mercado de servicios en la UE.", "b. Facilitar la libre circulación de servicios y la libertad de establecimiento de los prestadores de servicios dentro de la UE.", "c. Establecer normas de seguridad para las actividades físicas recreativas.", "d. Promover el Turismo Activo en las Comunidades Autónomas."],
+                correct: 1
+            },
+            {
+                q: "19. Según el Decreto 226/2017 de Canarias, ¿qué requisito debe cumplir el personal responsable técnico en actividades de Turismo Activo?",
+                options: ["a. Tener un nivel de idioma español equivalente al B1.", "b. Poseer una certificación en primeros auxilios.", "c. Contar con una póliza de seguro de responsabilidad civil.", "d. Tener experiencia previa en actividades de turismo activo."],
+                correct: 1
+            },
+            {
+                q: "20. ¿Qué ley incluye disposiciones relevantes para las Actividades Físicas Recreativas y el Turismo Activo en España?",
+                options: ["a. Ley 39/2022, de 30 de diciembre, del Deporte.", "b. Ley 8/2012, de 19 de julio, de Turismo de las Illes Balears.", "c. Decreto 226/2017, de 13 de noviembre, de Canarias.", "d. Real Decreto Legislativo 1/2007 sobre la defensa de los consumidores y usuarios."],
+                correct: 0
+            },
+            {
+                q: "21. Las actividades de Turismo Activo en Canarias no requieren seguro específico para su desarrollo.",
+                options: ["a. Verdadero", "b. Falso."],
+                correct: 1
+            },
+            {
+                q: "22. El Turismo Activo puede generar un impacto emocional positivo que favorece la fidelización del cliente.",
+                options: ["a. Verdadero.", "b. Falso."],
+                correct: 0
+            },
+            {
+                q: "23. ¿Qué fenómeno explica que los turistas valoren más las experiencias en las que participan activamente?",
+                options: ["a. Efecto Doppler.", "b. Efecto Placebo.", "c. Efecto Ikea.", "d. Efecto Mariposa."],
+                correct: 2
+            },
+            {
+                q: "24. ¿Cuál es la definición más aceptada actualmente de Turismo Activo en España?",
+                options: ["a. Actividades turísticas que implican descanso y relajación.", "b. Actividades culturales realizadas en museos y teatros.", "c. Actividades deportivas y recreativas en la naturaleza usando recursos naturales.", "d. Viajes organizados a ciudades históricas."],
+                correct: 2
+            },
+            {
+                q: "25. El Turismo Activo requiere la intervención de personal técnico especializado debido a la complejidad y riesgo de las actividades.",
+                options: ["a. Verdadero.", "b. Falso."],
+                correct: 0
+            },
+            {
+                q: "26. El concepto 'Océano Azul' se refiere a mercados saturados con alta competencia.",
+                options: ["a. Verdadero.", "b. Falso."],
+                correct: 1
+            },
+            {
+                q: "27. Las actividades de tipo II en la Escala de Diversión pueden ser incómodas en su realización, pero se recuerdan con cariño.",
+                options: ["a. Verdadero.", "b. Falso."],
+                correct: 0
+            },
+            {
+                q: "28. El Turismo Activo no tiene relación con los ODS.",
+                options: ["a. Verdadero.", "b. Falso."],
+                correct: 1
+            },
+            {
+                q: "29. ¿Qué tipo de actividad corresponde al tipo 2 en la Escala de Diversión?",
+                options: ["a. Cena en un restaurante.", "b. Retiros de meditación.", "c. Senderismo desafiante que se disfruta al recordarlo.", "d. Actividades de supervivencia extrema."],
+                correct: 2
+            },
+            {
+                q: "30. ¿Cuál de las siguientes modalidades emergentes del Turismo Activo se basa en la colaboración entre todos?",
+                options: ["a. Turismo Deportivo Especializado.", "b. Turismo Colaborativo.", "c. Turismo de Festivales.", "d. Turismo Desconectado."],
+                correct: 1
+            },
+            {
+                q: "31. Las actividades complementarias en Turismo son exclusivamente turísticas y constituyen el motivo principal del viaje.",
+                options: ["a. Verdadero.", "b. Falso."],
+                correct: 1
+            },
+            {
+                q: "32. Las actividades complementarias pueden ser un factor decisivo en la elección de un producto turístico.",
+                options: ["a. Verdadero.", "b. Falso."],
+                correct: 0
+            },
+            {
+                q: "33. Las actividades físico-deportivas son una actividad complementaria.",
+                options: ["a. Verdadero.", "b. Falso."],
+                correct: 0
+            },
+            {
+                q: "34. ¿Cuál de las siguientes opciones es una actividad complementaria?",
+                options: ["a. Alojamiento en Hotel.", "b. Transporte al destino.", "c. Senderismo en un Parque Natural.", "d. Compra de billetes de avión."],
+                correct: 2
+            },
+            {
+                q: "35. ¿Cuál de las siguientes es una estrategia clave para integrar actividades complementarias en circuitos turísticos?",
+                options: ["a. Reducir el número de actividades.", "b. Eliminar la participación de proveedores locales.", "c. Crear itinerarios rígidos.", "d. Establecer colaboraciones con proveedores locales."],
+                correct: 3
+            }
+        ];
+
+        var currentQuestionIndex = 0;
+        var score = 0;
+
+        function showScreen(screenId) {
+            document.getElementById("cover-screen").style.display = "none";
+            document.getElementById("quiz-screen").style.display = "none";
+            document.getElementById("results-screen").style.display = "none";
+            document.getElementById(screenId).style.display = "block";
+            window.scrollTo(0, 0);
+        }
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById("live-score").innerText = score;
+            showScreen("quiz-screen");
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            var currentQuestion = quizData[currentQuestionIndex];
+            
+            document.getElementById("question-number").innerText = "Pregunta " + (currentQuestionIndex + 1) + " de " + quizData.length;
+            var progressPercent = (currentQuestionIndex / quizData.length) * 100;
+            document.getElementById("progress-bar").style.width = progressPercent + "%";
+            
+            document.getElementById("question-text").innerText = currentQuestion.q;
+            document.getElementById("next-btn").style.display = "none";
+
+            var container = document.getElementById("options-container");
+            container.innerHTML = "";
+
+            for (var i = 0; i < currentQuestion.options.length; i++) {
+                (function(index) {
+                    var button = document.createElement("button");
+                    button.className = "option-btn";
+                    button.innerText = currentQuestion.options[index];
+                    button.onclick = function() { selectOption(index, button); };
+                    container.appendChild(button);
+                })(i);
+            }
+        }
+
+        function selectOption(selectedIndex, clickedButton) {
+            var currentQuestion = quizData[currentQuestionIndex];
+            var buttons = document.getElementsByClassName("option-btn");
+
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = true;
+            }
+
+            if (selectedIndex === currentQuestion.correct) {
+                clickedButton.classList.add("correct");
+                score++;
+                document.getElementById("live-score").innerText = score;
+            } else {
+                clickedButton.classList.add("incorrect");
+                buttons[currentQuestion.correct].classList.add("correct");
+            }
+
+            document.getElementById("next-btn").style.display = "block";
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function endQuiz() {
+            document.getElementById("progress-bar").style.width = "100%";
+            document.getElementById("final-score").innerText = score;
+            
+            var pct = Math.round((score / quizData.length) * 100);
+            document.getElementById("percentage-text").innerText = "Porcentaje de aciertos: " + pct + "%";
+
+            var msg = "";
+            if (score === quizData.length) {
+                msg = "¡Espectacular! Eres la reina indiscutible del turismo. ¡Un examen impecable, mi princesita! 👑✨";
+            } else if (score >= 28) {
+                msg = "¡Impresionante! Has estudiado de maravilla. Estás más que lista para brillar en el examen. ¡Sigue así! 💖";
+            } else if (score >= 18) {
+                msg = "¡Muy buen esfuerzo! Vas por muy buen camino, solo falta repasar un par de detalles para asegurar el sobresaliente. ¡Tú puedes! 🌸";
+            } else {
+                msg = "¡No pasa nada, mi amor! El camino se hace practicando. Dale otra vuelta al cuestionario y verás cómo sube esa nota en nada. 💪💕";
+            }
+            
+            document.getElementById("feedback-message").innerText = msg;
+            showScreen("results-screen");
+        }
+
+        function restartQuiz() {
+            showScreen("cover-screen");
+        }
+    </script>
+</body>
+</html>
