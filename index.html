@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Cuestionario para la princesita</title>
 
 <style>
@@ -68,20 +66,15 @@ transition:.4s;
 font-weight:bold;
 margin-bottom:20px;
 color:#ff2f7d;
-font-size:1rem;
 }
 
-/* PREGUNTA */
-
 #question{
-font-size:1.35rem;
+font-size:1.3rem;
 font-weight:bold;
 line-height:1.7;
 margin-bottom:25px;
 color:#ff2f7d;
 }
-
-/* RESPUESTAS */
 
 .answers{
 display:flex;
@@ -99,44 +92,26 @@ font-size:1rem;
 text-align:left;
 transition:.3s;
 width:100%;
-
-white-space:normal;
-word-wrap:break-word;
-overflow-wrap:break-word;
 line-height:1.7;
-
-display:block;
-
-/* LETRAS ROSAS */
 color:#ff2f7d;
-
 font-weight:bold;
 }
 
 .answer-btn:hover{
 background:#ffd6e7;
-transform:scale(1.02);
 }
-
-/* CORRECTA */
 
 .correct{
 background:#b8f5c4 !important;
 color:#0f5132 !important;
-font-weight:bold;
 }
-
-/* INCORRECTA */
 
 .wrong{
 background:#ffb3b3 !important;
 color:#7f1d1d !important;
-font-weight:bold;
 }
 
 .info{
-display:flex;
-justify-content:space-between;
 margin-top:25px;
 font-weight:bold;
 color:#ff2f7d;
@@ -157,12 +132,7 @@ background:#ff2f7d;
 color:white;
 font-size:1rem;
 cursor:pointer;
-transition:.3s;
 font-weight:bold;
-}
-
-button:hover{
-background:#e91e63;
 }
 
 .hidden{
@@ -180,15 +150,14 @@ margin-bottom:20px;
 
 #finalScore{
 font-size:1.5rem;
-margin-bottom:20px;
-line-height:1.6;
 color:#ff2f7d;
+margin-bottom:20px;
 }
 
 @media(max-width:700px){
 
-.container{
-padding:18px;
+.buttons{
+flex-direction:column;
 }
 
 h1{
@@ -196,22 +165,16 @@ font-size:1.7rem;
 }
 
 #question{
-font-size:1.15rem;
+font-size:1.1rem;
 }
 
 .answer-btn{
 font-size:.95rem;
-padding:15px;
-}
-
-.buttons{
-flex-direction:column;
 }
 
 }
 
 </style>
-
 </head>
 
 <body>
@@ -237,9 +200,7 @@ Turismo 2025 ✨
 <div class="answers" id="answers"></div>
 
 <div class="info">
-<div>
 Puntuación: <span id="score">0</span>
-</div>
 </div>
 
 <div class="buttons">
@@ -303,6 +264,340 @@ answers:[
 "Eran conocidos como gentle organiseurs.",
 "Eran conocidos como gentle members.",
 "No percibían salario por sus servicios."
+],
+correct:3
+},
+
+{
+question:"Las Nuevas Tendencias en Animación Turística:",
+answers:[
+"Se limitan al campo de las Nuevas Tecnologías.",
+"La Animación no está afectada por las Nuevas Tendencias.",
+"Abarcan al personal, las actividades, los clientes, etc.",
+"Ninguna de las opciones anteriores es correcta."
+],
+correct:2
+},
+
+{
+question:"La función social de la Animación Turística:",
+answers:[
+"Se encarga de integrar al turista en el medio social.",
+"Relaciona al turista con asociaciones.",
+"Interfiere con otras funciones.",
+"Todas las opciones son correctas."
+],
+correct:0
+},
+
+{
+question:"El animador turístico:",
+answers:[
+"Debe llevar a cabo las actividades desde su preparación a su conclusión.",
+"Solo ejecuta actividades.",
+"No maneja aparatos electrónicos.",
+"No participa en actividades."
+],
+correct:0
+},
+
+{
+question:"Con respecto a la función social del animador:",
+answers:[
+"No interactuarían.",
+"Serían más lentas.",
+"Serían menos enriquecedoras.",
+"Relaciones públicas."
+],
+correct:2
+},
+
+{
+question:"La animación turística se puede dar:",
+answers:[
+"En cualquier entorno.",
+"En un entorno turístico.",
+"Educativo y turístico.",
+"En cualquier entorno si es animador."
+],
+correct:1
+},
+
+{
+question:"Un animador turístico:",
+answers:[
+"Planifica el programa.",
+"Realiza actividades recreativas.",
+"Controla calidad.",
+"Todas son correctas."
+],
+correct:3
+},
+
+{
+question:"¿Cuál afirmación es verdadera?",
+answers:[
+"El multifuncional se especializa.",
+"El artista usa audiovisuales.",
+"Los infantiles se especializan en niños.",
+"Los técnicos son actores."
+],
+correct:2
+},
+
+{
+question:"La medida de la calidad:",
+answers:[
+"Es objetiva.",
+"La decide el prestador.",
+"La decide el cliente.",
+"La decide el sector."
+],
+correct:2
+},
+
+{
+question:"Para implantar Calidad Total:",
+answers:[
+"Involucrar a todos.",
+"Periodo concreto.",
+"Copiar empresas.",
+"Dirección al final."
+],
+correct:0
+},
+
+{
+question:"El ciclo PDCA significa:",
+answers:[
+"Poder Decidir Calidad Alta.",
+"Planear Comenzar.",
+"Planificar Hacer Verificar Actuar.",
+"Plantear Decisiones."
+],
+correct:2
+},
+
+{
+question:"El manual de calidad es:",
+answers:[
+"Específico para cada empresa.",
+"Para cada sector.",
+"Para cada país.",
+"Para cada departamento."
+],
+correct:0
+},
+
+{
+question:"Los datos de una encuesta:",
+answers:[
+"Comparan resultados.",
+"No sirven.",
+"Indican cambios.",
+"A y C correctas."
+],
+correct:3
+},
+
+{
+question:"Diferencia entre Ley y Decreto:",
+answers:[
+"Leyes ejecutivo.",
+"Leyes requieren proceso legislativo.",
+"Más ámbito.",
+"Leyes desarrollan decretos."
+],
+correct:1
+},
+
+{
+question:"Mayoría Ley Orgánica:",
+answers:[
+"Simple.",
+"Absoluta.",
+"Relativa.",
+"Cualificada."
+],
+correct:1
+},
+
+{
+question:"Objetivo Directiva Bolkestein:",
+answers:[
+"Regular mercado.",
+"Libre circulación servicios.",
+"Normas seguridad.",
+"Promover Turismo Activo."
+],
+correct:1
+},
+
+{
+question:"Requisito responsable técnico:",
+answers:[
+"Nivel B1 español.",
+"Primeros auxilios.",
+"Seguro.",
+"Experiencia."
+],
+correct:0
+},
+
+{
+question:"Ley relevante Turismo Activo:",
+answers:[
+"Ley 39/2022.",
+"Ley 8/2012.",
+"Decreto 226/2017.",
+"Real Decreto 1/2007."
+],
+correct:0
+},
+
+{
+question:"Turismo Activo Canarias no requiere seguro:",
+answers:[
+"Verdadero.",
+"Falso."
+],
+correct:1
+},
+
+{
+question:"Turismo Activo genera impacto positivo:",
+answers:[
+"Verdadero.",
+"Falso."
+],
+correct:0
+},
+
+{
+question:"Fenómeno valoración activa:",
+answers:[
+"Doppler.",
+"Placebo.",
+"Ikea.",
+"Mariposa."
+],
+correct:2
+},
+
+{
+question:"Definición Turismo Activo:",
+answers:[
+"Relajación.",
+"Culturales.",
+"Naturaleza y deporte.",
+"Ciudades históricas."
+],
+correct:2
+},
+
+{
+question:"Turismo Activo requiere técnicos:",
+answers:[
+"Verdadero.",
+"Falso."
+],
+correct:0
+},
+
+{
+question:"Océano Azul:",
+answers:[
+"Verdadero.",
+"Falso."
+],
+correct:1
+},
+
+{
+question:"Tipo II Escala Diversión:",
+answers:[
+"Verdadero.",
+"Falso."
+],
+correct:0
+},
+
+{
+question:"Turismo Activo no relación ODS:",
+answers:[
+"Verdadero.",
+"Falso."
+],
+correct:1
+},
+
+{
+question:"Actividad tipo 2:",
+answers:[
+"Cena restaurante.",
+"Retiro meditación.",
+"Senderismo desafiante.",
+"Supervivencia extrema."
+],
+correct:2
+},
+
+{
+question:"Modalidad basada colaboración:",
+answers:[
+"Turismo Deportivo.",
+"Turismo Colaborativo.",
+"Festivales.",
+"Desconectado."
+],
+correct:1
+},
+
+{
+question:"Actividades complementarias exclusivas:",
+answers:[
+"Verdadero.",
+"Falso."
+],
+correct:1
+},
+
+{
+question:"Complementarias decisivas:",
+answers:[
+"Verdadero.",
+"Falso."
+],
+correct:0
+},
+
+{
+question:"Físico-deportivas complementarias:",
+answers:[
+"Verdadero.",
+"Falso."
+],
+correct:0
+},
+
+{
+question:"Actividad complementaria:",
+answers:[
+"Alojamiento.",
+"Transporte.",
+"Senderismo.",
+"Billetes avión."
+],
+correct:2
+},
+
+{
+question:"Estrategia integrar actividades:",
+answers:[
+"Reducir actividades.",
+"Eliminar proveedores.",
+"Itinerarios rígidos.",
+"Colaborar proveedores."
 ],
 correct:3
 }
@@ -403,8 +698,7 @@ button.classList.add("wrong");
 
 }
 
-document.getElementById("nextBtn")
-.onclick = function(){
+document.getElementById("nextBtn").onclick = function(){
 
 if(currentQuestion < questions.length - 1){
 
@@ -420,8 +714,7 @@ showResult();
 
 };
 
-document.getElementById("prevBtn")
-.onclick = function(){
+document.getElementById("prevBtn").onclick = function(){
 
 if(currentQuestion > 0){
 
@@ -443,20 +736,18 @@ document.getElementById("result")
 
 document.getElementById("finalScore")
 .innerHTML =
-"Has acertado <b>" +
+"Has acertado " +
 score +
-"</b> de <b>" +
+" de " +
 questions.length +
-"</b> preguntas 💖";
+" preguntas 💖";
 
 }
 
 function restartQuiz(){
 
 currentQuestion = 0;
-
 score = 0;
-
 answeredQuestions = {};
 
 scoreEl.innerHTML = 0;
