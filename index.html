@@ -174,7 +174,8 @@
 </div>
 
 <script>
-const quizData = [
+// Base de datos original de preguntas
+const originalQuizData = [
     {
         question: "1.- ¿Qué señala este árbitro?",
         image: "pregunta1.png",
@@ -338,14 +339,34 @@ const quizData = [
     }
 ];
 
+let quizData = [];
 let currentQuestionIndex = 0;
-// Array para almacenar qué ha respondido el usuario en cada pregunta:
-// null = sin responder, true = correcto, false = incorrecto
-let userAnswers = new Array(quizData.length).fill(null); 
+let userAnswers = [];
+
+// Función para desordenar el orden de las preguntas de forma aleatoria
+function shuffleQuestions(array) {
+    let currentIndex = array.length, randomIndex;
+    while (currentIndex != 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+    return array;
+}
+
+function initQuiz() {
+    // Clonamos y desordenamos la lista de preguntas
+    quizData = shuffleQuestions([...originalQuizData]);
+    currentQuestionIndex = 0;
+    userAnswers = new Array(quizData.length).fill(null);
+    renderQuiz();
+}
 
 function renderQuiz() {
     const quizContainer = document.getElementById('quiz');
     quizContainer.innerHTML = '';
+
+    const letters = ['A', 'B', 'C', 'D'];
 
     quizData.forEach((q, index) => {
         const block = document.createElement('div');
@@ -354,12 +375,12 @@ function renderQuiz() {
 
         let imageHtml = '';
         if (q.image) {
-            imageHtml = `<div class="image-container"><img src="${q.image}" alt="Imagen del Árbitro de Judo"></div>`;
+            imageHtml = `<div class="image-container"><img src="${q.image}" alt="Imagen de Arbitraje"></div>`;
         }
 
         let optionsHtml = '';
         q.options.forEach((opt, optIndex) => {
-            optionsHtml += `<li class="option-item" onclick="checkAnswer(${index}, ${optIndex}, this)">${opt}</li>`;
+            optionsHtml += `<li class="option-item" onclick="checkAnswer(${index}, ${optIndex}, this)"><strong>${letters[optIndex]}.</strong> ${opt}</li>`;
         });
 
         block.innerHTML = `
@@ -377,7 +398,6 @@ function checkAnswer(qIndex, selectedOptIndex, element) {
     const q = quizData[qIndex];
     const parent = element.parentElement;
     
-    // Si ya ha respondido a esta pregunta, no hacer nada
     if (userAnswers[qIndex] !== null) return;
 
     const items = parent.querySelectorAll('.option-item');
@@ -425,49 +445,39 @@ function updateControls() {
 }
 
 function showResults() {
-    // Contar las respuestas
     const correct = userAnswers.filter(ans => ans === true).length;
     const wrong = userAnswers.filter(ans => ans === false).length;
     const unanswered = userAnswers.filter(ans => ans === null).length;
 
-    // Ocultar el cuestionario y mostrar los resultados
     document.getElementById('quiz-wrapper').style.display = 'none';
-    const resultsContainer = document.getElementById('results');
-    resultsContainer.style.display = 'block';
+    document.getElementById('results').style.display = 'block';
 
-    // Mostrar las estadísticas
     document.getElementById('scoreDisplay').innerText = `${correct} / ${quizData.length}`;
     document.getElementById('correctCount').innerText = correct;
     document.getElementById('wrongCount').innerText = wrong;
     document.getElementById('unansweredCount').innerText = unanswered;
 
-    // Mensaje de feedback dinámico (Se aprueba con la mitad o más)
     const feedbackMessage = document.getElementById('feedbackMessage');
     const scoreDisplay = document.getElementById('scoreDisplay');
     
     if (correct >= (quizData.length / 2)) {
         feedbackMessage.innerText = "¡Enhorabuena! Has aprobado el test.";
-        scoreDisplay.style.color = "#28a745"; // Verde
+        scoreDisplay.style.color = "#28a745";
     } else {
         feedbackMessage.innerText = "Has suspendido. ¡Sigue repasando el reglamento!";
-        scoreDisplay.style.color = "#dc3545"; // Rojo
+        scoreDisplay.style.color = "#dc3545";
     }
 }
 
 function restartQuiz() {
-    // Resetear variables de estado
-    currentQuestionIndex = 0;
-    userAnswers = new Array(quizData.length).fill(null);
-
-    // Volver a mostrar el cuestionario y ocultar los resultados
     document.getElementById('results').style.display = 'none';
     document.getElementById('quiz-wrapper').style.display = 'block';
-
-    // Volver a renderizarlo todo limpio
-    renderQuiz();
+    // Volvemos a inicializar para que se mezclen de nuevo
+    initQuiz();
 }
 
-renderQuiz();
+// Arrancar por primera vez
+initQuiz();
 </script>
 
 </body>
