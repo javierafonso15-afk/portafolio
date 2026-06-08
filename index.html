@@ -1,769 +1,355 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CUESTIONARIOS 2025</title>
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
-body{
-background:linear-gradient(135deg,#ffd6e7,#ffc2d1);
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:20px;
-}
-
-.container{
-width:100%;
-max-width:900px;
-background:white;
-border-radius:25px;
-padding:25px;
-box-shadow:0 10px 30px rgba(0,0,0,0.2);
-}
-
-h1{
-text-align:center;
-color:#ff2f7d;
-margin-bottom:10px;
-font-size:2.2rem;
-}
-
-.subtitle{
-text-align:center;
-color:#ff5c93;
-margin-bottom:25px;
-font-weight:bold;
-}
-
-.progress{
-width:100%;
-height:12px;
-background:#ffe0ea;
-border-radius:20px;
-overflow:hidden;
-margin-bottom:20px;
-}
-
-.progress-bar{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,#ff2f7d,#ff8db3);
-transition:.4s;
-}
-
-#questionCounter{
-font-weight:bold;
-margin-bottom:20px;
-color:#ff2f7d;
-}
-
-#question{
-font-size:1.3rem;
-font-weight:bold;
-line-height:1.7;
-margin-bottom:25px;
-color:#ff2f7d;
-}
-
-.answers{
-display:flex;
-flex-direction:column;
-gap:15px;
-}
-
-.answer-btn{
-padding:18px;
-border:none;
-border-radius:15px;
-background:#fff0f5;
-cursor:pointer;
-font-size:1rem;
-text-align:left;
-transition:.3s;
-width:100%;
-line-height:1.7;
-color:#ff2f7d;
-font-weight:bold;
-}
-
-.answer-btn:hover{
-background:#ffd6e7;
-}
-
-.correct{
-background:#b8f5c4 !important;
-color:#0f5132 !important;
-}
-
-.wrong{
-background:#ffb3b3 !important;
-color:#7f1d1d !important;
-}
-
-.info{
-margin-top:25px;
-font-weight:bold;
-color:#ff2f7d;
-}
-
-.buttons{
-display:flex;
-gap:10px;
-margin-top:20px;
-}
-
-button{
-flex:1;
-padding:15px;
-border:none;
-border-radius:15px;
-background:#ff2f7d;
-color:white;
-font-size:1rem;
-cursor:pointer;
-font-weight:bold;
-}
-
-.hidden{
-display:none;
-}
-
-#result{
-text-align:center;
-}
-
-#result h2{
-color:#ff2f7d;
-margin-bottom:20px;
-}
-
-#finalScore{
-font-size:1.5rem;
-color:#ff2f7d;
-margin-bottom:20px;
-}
-
-@media(max-width:700px){
-
-.buttons{
-flex-direction:column;
-}
-
-h1{
-font-size:1.7rem;
-}
-
-#question{
-font-size:1.1rem;
-}
-
-.answer-btn{
-font-size:.95rem;
-}
-
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoevaluación: Reglamento de Judo II</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .question-block {
+            display: none;
+        }
+        .question-block.active {
+            display: block;
+        }
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 280px;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+        .option-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-item:hover {
+            background: #e9ecef;
+            border-color: #ced4da;
+        }
+        .option-item.correct {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            font-weight: bold;
+        }
+        .option-item.wrong {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .rationale {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: #e9ecef;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+            display: none;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
-
 <body>
 
 <div class="container">
-
-<div id="quizBox">
-
-<h1>📚 CUESTIONARIOS 2025</h1>
-
-<p class="subtitle">
-Turismo 2025 ✨
-</p>
-
-<div class="progress">
-<div class="progress-bar" id="progressBar"></div>
-</div>
-
-<div id="questionCounter"></div>
-
-<div id="question"></div>
-
-<div class="answers" id="answers"></div>
-
-<div class="info">
-Puntuación: <span id="score">0</span>
-</div>
-
-<div class="buttons">
-
-<button id="prevBtn">
-⬅ Anterior
-</button>
-
-<button id="nextBtn">
-Siguiente ➡
-</button>
-
-</div>
-
-</div>
-
-<div id="result" class="hidden">
-
-<h2>✨ Resultado Final ✨</h2>
-
-<div id="finalScore"></div>
-
-<button onclick="restartQuiz()">
-🔄 Reiniciar cuestionario
-</button>
-
-</div>
-
+    <h1>Test: Reglamento de Judo II</h1>
+    <div id="quiz" class="quiz-container"></div>
+    <div class="controls">
+        <button id="prevBtn" onclick="changeQuestion(-1)" disabled>Anterior</button>
+        <button id="nextBtn" onclick="changeQuestion(1)">Siguiente</button>
+    </div>
 </div>
 
 <script>
-
-const questions = [
-
-{
-question:"1. El componente más importante de la animación es:",
-answers:[
-"a. La persona agente que realiza la actividad.",
-"b. La socialización.",
-"c. La integración.",
-"d. El descubrimiento."
-],
-correct:1
-},
-
-{
-question:"2. La Animación Turística como tal tiene sus inicios:",
-answers:[
-"a. Después de la Primera Guerra Mundial.",
-"b. A principios del siglo XIX.",
-"c. Gracias a Gérard Blitz.",
-"d. Las opciones a y c son correctas."
-],
-correct:3
-},
-
-{
-question:"3. En el Club Méditerranée:",
-answers:[
-"a. Los animadores eran profesionales autónomos.",
-"b. Eran conocidos como gente organiseurs.",
-"c. Eran conocidos como gentle members.",
-"d. No percibían salario por sus servicios."
-],
-correct:3
-},
-
-{
-question:"4. Las Nuevas Tendencias en Animación Turística:",
-answers:[
-"a. Se limitan al campo de las Nuevas Tecnologías.",
-"b. La Animación no está afectada por las Nuevas Tendencias.",
-"c. Abarcan al personal, las actividades, los clientes, etc.",
-"d. Ninguna de las opciones anteriores es correcta."
-],
-correct:2
-},
-
-{
-question:"5. La función social de la Animación Turística:",
-answers:[
-"a. Se encarga de integrar al turista en el medio social en el que se encuentra.",
-"b. Relaciona al turista con asociaciones de la zona.",
-"c. Interfiere con el resto de las funciones de la Animación.",
-"d. Todas las opciones son correctas."
-],
-correct:0
-},
-
-{
-question:"6. El animador turístico:",
-answers:[
-"a. Debe llevar a cabo las actividades desde su preparación a su conclusión.",
-"b. Solo tiene que ejecutar las actividades, de la preparación se ocupará el jefe de animación.",
-"c. No maneja aparatos electrónicos, ya que se necesita una preparación especial.",
-"d. No debe participar en las actividades preparadas como jugador o miembro del elenco."
-],
-correct:0
-},
-
-{
-question:"7. Con respecto a la función social del animador, se podría afirmar que:",
-answers:[
-"a. Si el animador no actuara, los huéspedes no interactuarían entre sí.",
-"b. Sin el animador, las relaciones sociales serían las mismas pero se darían más lentamente.",
-"c. Sin el animador, las relaciones sociales serían menos enriquecedoras.",
-"d. Las relaciones públicas forman parte de la función social."
-],
-correct:2
-},
-
-{
-question:"8. La animación turística se puede dar:",
-answers:[
-"a. En cualquier entorno.",
-"b. En un entorno turístico.",
-"c. En un entorno educativo y turístico.",
-"d. En cualquier entorno siempre que el agente sea un animador turístico."
-],
-correct:1
-},
-
-{
-question:"9. Un animador turístico:",
-answers:[
-"a. Planifica el programa de animación del Hotel.",
-"b. Lleva a cabo las actividades recreativas de su establecimiento hostelero.",
-"c. Controla la calidad de las actividades realizadas.",
-"d. Todas las opciones son correctas."
-],
-correct:3
-},
-
-{
-question:"10. Señala cuál de las siguientes afirmaciones es verdadera:",
-answers:[
-"a. El animador multifuncional se especializa en un tipo de público.",
-"b. El animador artista conoce y utiliza los medios audiovisuales.",
-"c. Los animadores infantiles se especializan en programas para niños.",
-"d. Los animadores técnicos son actores, cantantes, coreógrafos o bailarines."
-],
-correct:2
-},
-
-{
-question:"11. La medida de la calidad:",
-answers:[
-"a. Es objetiva.",
-"b. La decide el prestador de servicios.",
-"c. La decide el cliente.",
-"d. La decide el sector."
-],
-correct:2
-},
-
-{
-question:"12. Para implantar un Sistema de Calidad Total:",
-answers:[
-"a. Necesitamos que se involucren todos los miembros de la empresa.",
-"b. Nos ceñimos a un periodo de tiempo concreto.",
-"c. Nos fijaremos en lo que hacen otras empresas y haremos lo mismo.",
-"d. La colaboración de dirección será necesaria al final del proceso."
-],
-correct:0
-},
-
-{
-question:"13. El ciclo PDCA significa:",
-answers:[
-"a. Poder Decidir Calidad Alta.",
-"b. Planear Comenzar Decidir Alcanzar.",
-"c. Planificar Hacer Verificar Actuar.",
-"d. Plantear Decisiones Realizar Acciones."
-],
-correct:2
-},
-
-{
-question:"14. El manual de calidad es:",
-answers:[
-"a. Específico para cada empresa.",
-"b. Específico para cada sector.",
-"c. Específico para cada país.",
-"d. Específico para cada departamento de una empresa."
-],
-correct:0
-},
-
-{
-question:"15. Los datos de una encuesta:",
-answers:[
-"a. Nos permiten comparar los resultados de una empresa.",
-"b. No sirven si no se los pasamos a los mismos clientes.",
-"c. Nos indican los cambios y modificaciones que debemos hacer.",
-"d. Las opciones a y c son correctas."
-],
-correct:3
-},
-
-{
-question:"16. ¿Cuál es la principal diferencia entre una Ley y un Decreto?",
-answers:[
-"a. Las leyes son aprobadas por el poder ejecutivo.",
-"b. Las leyes requieren un proceso legislativo completo, mientras que los decretos pueden ser aprobados directamente por el Gobierno.",
-"c. Los decretos tienen un ámbito de aplicación más amplio que las leyes.",
-"d. Las leyes son específicas y se utilizan para desarrollar o complementar los decretos."
-],
-correct:1
-},
-
-{
-question:"17. ¿Qué tipo de mayoría se requiere para aprobar una Ley Orgánica en España?",
-answers:[
-"a. Mayoría simple.",
-"b. Mayoría absoluta.",
-"c. Mayoría relativa.",
-"d. Mayoría cualificada."
-],
-correct:1
-},
-
-{
-question:"18. ¿Cuál es el objetivo principal de la Directiva Bolkestein (Directiva 2006/123/CE)?",
-answers:[
-"a. Regular el mercado de servicios en la UE.",
-"b. Facilitar la libre circulación de servicios y la libertad de establecimiento de los prestadores de servicios dentro de la UE.",
-"c. Establecer normas de seguridad para las actividades físicas recreativas.",
-"d. Promover el Turismo Activo en las Comunidades Autónomas."
-],
-correct:1
-},
-
-{
-question:"19. Según el Decreto 226/2017 de Canarias, ¿qué requisito debe cumplir el personal responsable técnico en actividades de Turismo Activo?",
-answers:[
-"a. Tener un nivel de idioma español equivalente al B1.",
-"b. Poseer una certificación en primeros auxilios.",
-"c. Contar con una póliza de seguro de responsabilidad civil.",
-"d. Tener experiencia previa en actividades de turismo activo."
-],
-correct:0
-},
-
-{
-question:"20. ¿Qué ley incluye disposiciones relevantes para las Actividades Físicas Recreativas y el Turismo Activo en España?",
-answers:[
-"a. Ley 39/2022, de 30 de diciembre, del Deporte.",
-"b. Ley 8/2012, de 19 de julio, de Turismo de las Illes Balears.",
-"c. Decreto 226/2017, de 13 de noviembre, de Canarias.",
-"d. Real Decreto Legislativo 1/2007 sobre la defensa de los consumidores y usuarios."
-],
-correct:0
-},
-
-{
-question:"21. Las actividades de Turismo Activo en Canarias no requieren seguro específico para su desarrollo.",
-answers:[
-"a. Verdadero.",
-"b. Falso."
-],
-correct:1
-},
-
-{
-question:"22. El Turismo Activo puede generar un impacto emocional positivo que favorece la fidelización del cliente.",
-answers:[
-"a. Verdadero.",
-"b. Falso."
-],
-correct:0
-},
-
-{
-question:"23. ¿Qué fenómeno explica que los turistas valoren más las experiencias en las que participan activamente?",
-answers:[
-"a. Efecto Doppler.",
-"b. Efecto Placebo.",
-"c. Efecto Ikea.",
-"d. Efecto Mariposa."
-],
-correct:2
-},
-
-{
-question:"24. ¿Cuál es la definición más aceptada actualmente de Turismo Activo en España?",
-answers:[
-"a. Actividades turísticas que implican descanso y relajación.",
-"b. Actividades culturales realizadas en museos y teatros.",
-"c. Actividades deportivas y recreativas en la naturaleza usando recursos naturales.",
-"d. Viajes organizados a ciudades históricas."
-],
-correct:2
-},
-
-{
-question:"25. El Turismo Activo requiere la intervención de personal técnico especializado debido a la complejidad y riesgo de las actividades.",
-answers:[
-"a. Verdadero.",
-"b. Falso."
-],
-correct:0
-},
-
-{
-question:"26. El concepto “Océano Azul” se refiere a mercados saturados con alta competencia.",
-answers:[
-"a. Verdadero.",
-"b. Falso."
-],
-correct:1
-},
-
-{
-question:"27. Las actividades de tipo II en la Escala de Diversión pueden ser incómodas en su realización, pero se recuerdan con cariño.",
-answers:[
-"a. Verdadero.",
-"b. Falso."
-],
-correct:0
-},
-
-{
-question:"28. El Turismo Activo no tiene relación con los ODS.",
-answers:[
-"a. Verdadero.",
-"b. Falso."
-],
-correct:1
-},
-
-{
-question:"29. ¿Qué tipo de actividad corresponde al tipo 2 en la Escala de Diversión?",
-answers:[
-"a. Cena en un restaurante.",
-"b. Retiros de meditación.",
-"c. Senderismo desafiante que se disfruta al recordarlo.",
-"d. Actividades de supervivencia extrema."
-],
-correct:2
-},
-
-{
-question:"30. ¿Cuál de las siguientes modalidades emergentes del Turismo Activo se basa en la colaboración entre todos?",
-answers:[
-"a. Turismo Deportivo Especializado.",
-"b. Turismo Colaborativo.",
-"c. Turismo de Festivales.",
-"d. Turismo Desconectado."
-],
-correct:1
-},
-
-{
-question:"31. Las actividades complementarias en Turismo son exclusivamente turísticas y constituyen el motivo principal del viaje.",
-answers:[
-"a. Verdadero.",
-"b. Falso."
-],
-correct:1
-},
-
-{
-question:"32. Las actividades complementarias pueden ser un factor decisivo en la elección de un producto turístico.",
-answers:[
-"a. Verdadero.",
-"b. Falso."
-],
-correct:0
-},
-
-{
-question:"33. Las actividades físico-deportivas son una actividad complementaria.",
-answers:[
-"a. Verdadero.",
-"b. Falso."
-],
-correct:0
-},
-
-{
-question:"34. ¿Cuál de las siguientes opciones es una actividad complementaria?",
-answers:[
-"a. Alojamiento en Hotel.",
-"b. Transporte al destino.",
-"c. Senderismo en un Parque Natural.",
-"d. Compra de billetes de avión."
-],
-correct:2
-},
-
-{
-question:"35. ¿Cuál de las siguientes es una estrategia clave para integrar actividades complementarias en circuitos turísticos?",
-answers:[
-"a. Reducir el número de actividades.",
-"b. Eliminar la participación de proveedores locales.",
-"c. Crear itinerarios rígidos.",
-"d. Establecer colaboraciones con proveedores locales."
-],
-correct:3
-}
-
+// Lista de preguntas vinculadas a la subcarpeta "fotos"
+const quizData = [
+    {
+        question: "1.- ¿Qué señala este árbitro?",
+        image: "fotos/pregunta1.png",
+        options: ["Koka", "Ippon", "Hajime", "Inmovilización (osae komi)"],
+        correct: 3,
+        rationale: "El árbitro se inclina extendiendo el brazo frontalmente hacia el suelo para indicar que se ha establecido el control de la inmovilización."
+    },
+    {
+        question: "2.- ¿Qué indica este?",
+        image: "fotos/pregunta2.png",
+        options: ["Vencedor.", "Waza-ari.", "Shido.", "Mate."],
+        correct: 1,
+        rationale: "El brazo extendido de forma lateral y horizontal a la altura del hombro señala la ventaja de Waza-ari (medio punto)."
+    },
+    {
+        question: "3.- ¿Qué está indicando este árbitro?",
+        image: "fotos/pregunta3.png",
+        options: ["Penalización.", "Ippon.", "Waza-ari.", "Mate."],
+        correct: 3,
+        rationale: "Levantar la mano frontalmente a la altura del hombro con la palma hacia delante es la orden y señal oficial para detener el combate (Mate)."
+    },
+    {
+        question: "4.- Este gesto, ¿qué está indicando?",
+        image: "fotos/pregunta4.png",
+        options: ["Ippon.", "Hajime.", "Waza ari.", "Penalización."],
+        correct: 2,
+        rationale: "Tener el brazo abierto lateralmente de forma paralela al suelo indica la concesión de medio punto (Waza-ari) por parte de la mesa arbitral."
+    },
+    {
+        question: "5.- ¿Cuánto mide la zona de seguridad que tiene el área de competición?",
+        image: null,
+        options: ["4 m.", "2 m.", "5 m.", "Pueden ser todas las anteriores"],
+        correct: 1,
+        rationale: "La distancia oficial mínima requerida para salvaguardar las caídas en el perímetro exterior es de 2 metros."
+    },
+    {
+        question: "6.- ¿Cuánto mide el área de combate?:",
+        image: null,
+        options: ["14x14", "12x12", "8x8", "10x10"],
+        correct: 2,
+        rationale: "El cuadrado interior útil donde los judokas inician el enfrentamiento y combaten mide exactamente 8x8 metros."
+    },
+    {
+        question: "7.- En una competición, los judoguis pueden ser:",
+        image: null,
+        options: ["Azul y blanco.", "Sólo blanco.", "Cualquiera de los dos.", "Ninguna de las anteriores."],
+        correct: 0,
+        rationale: "La normativa internacional vigente exige que un competidor vista de azul y el otro de blanco para facilitar la distinción de las acciones."
+    },
+    {
+        question: "8.- La duración de un combate, ¿cuál es?:",
+        image: null,
+        options: ["4 minutos.", "2 minutos.", "5 minutos.", "3 minutos."],
+        correct: 0,
+        rationale: "Cuatro minutos es el tiempo oficial estipulado para los encuentros en la categoría absoluta (senior)."
+    },
+    {
+        question: "9.- Para ganar por inmovilización, ¿cuánto tiempo estipula el reglamento?:",
+        image: null,
+        options: ["20 segundos.", "10 segundos.", "20 segundos o más pero menos de 24.", "15 segundos."],
+        correct: 0,
+        rationale: "Mantener bajo control de inmovilización (Osaekomi) al rival durante 20 segundos otorga el Ippon definitivo y la victoria."
+    },
+    {
+        question: "10.- Si tengo inmovilizado a mi oponente durante 15\" ¿qué ventaja se anota en el marcador?:",
+        image: null,
+        options: ["Waza ari.", "Ippon.", "No se consigue ninguna ventaja.", "Ninguna de las anteriores."],
+        correct: 0,
+        rationale: "Alcanzar los 15 segundos completos de control en suelo, sin llegar a los 20 segundos, se premia con un Waza-ari."
+    },
+    {
+        question: "11.- ¿Qué ocurre si después del tiempo de combate, no han conseguido ninguna ventaja?:",
+        image: null,
+        options: ["Se determina el combate de \"Técnica de Oro\"", "El árbitro decide quién vence.", "El resultado es de empate.", "Se comprueba quien ha atacado más."],
+        correct: 0,
+        rationale: "Se disputa un periodo de prórroga llamado 'Técnica de Oro' (Golden Score) donde el primero en puntuar o ser sancionado de forma decisiva gana."
+    },
+    {
+        question: "12.- ¿Cuándo se consigue Ippon derribando con una técnica?",
+        image: null,
+        options: ["Si es con control, sobre la espalda, con fuerza y velocidad.", "Si lo derriba con control y fuerza.", "Si lo proyecta con velocidad.", "Si apoya toda la espalda."],
+        correct: 0,
+        rationale: "El reglamento exige que coincidan simultáneamente los cuatro elementos: control de la acción, caída sobre la espalda, fuerza y velocidad."
+    },
+    {
+        question: "13.- Aspectos por los que se aplican las sanciones:",
+        image: null,
+        options: ["Mala utilización del judogui.", "Falta de combatividad.", "Derribar con fuerza.", "A y B son correctas."],
+        correct: 3,
+        rationale: "Tanto desajustar o usar incorrectamente la vestimenta de forma intencionada como la pasividad en el combate acarrean penalización."
+    },
+    {
+        question: "14.- ¿Con qué se sanciona el realizar cualquier acción que pueda lesionar o poner en peligro al adversario, especialmente su cuello o columna vertebral, o pueda ir en contra del espíritu del Judo?:",
+        image: null,
+        options: ["Hansoku make", "Shido", "Sólo se le dice para que no vuelva a hacerlo.", "Nada"],
+        correct: 0,
+        rationale: "Toda acción de alto riesgo que comprometa gravemente la seguridad física del rival se castiga con descalificación directa (Hansoku-make)."
+    },
+    {
+        question: "15.- ¿Cuándo se señala waza ari?",
+        image: null,
+        options: ["Si derribo a mi adversario con fuerza, velocidad y la espalda.", "Por inmovilizarlo 8 segundos.", "Porque uno de los competidores se sale del área de combate.", "Todas las anteriores."],
+        correct: 0,
+        rationale: "De acuerdo con los criterios específicos impresos en la plantilla de corrección del examen original, esta alternativa es la asignada como correcta."
+    },
+    {
+        question: "16.- Se sanciona con shido si:",
+        image: null,
+        options: ["Hay falta de combatividad.", "Un competidor inmoviliza a otro.", "Cuando un competidor agarra por las mangas al otro.", "Todas las anteriores."],
+        correct: 0,
+        rationale: "La pasividad táctica o no proponer ataques es amonestada formalmente mediante una penalización leve llamada Shido."
+    },
+    {
+        question: "17.- Si un competidor tiene 3 shidos:",
+        image: null,
+        options: ["Equivalen a Hansoku make.", "Es un waza ari para el otro.", "No se le anota nada.", "Ninguna de las anteriores."],
+        correct: 0,
+        rationale: "La acumulación de tres amonestaciones leves (Shidos) equivale automáticamente a una descalificación definitiva (Hansoku-make)."
+    },
+    {
+        question: "18.- Cuando debe señalarse Mate:",
+        image: null,
+        options: ["Por finalización del tiempo de combate.", "Para sancionar a uno de los competidores.", "Para decir que se arreglen la ropa.", "Todas las anteriores."],
+        correct: 3,
+        rationale: "El árbitro ordena Mate para pausar el combate en cualquiera de estos escenarios: fin del tiempo, aplicación de sanciones o reajuste de la vestimenta."
+    },
+    {
+        question: "19.- En judo se puede vencer:",
+        image: null,
+        options: ["Por la superioridad en la suma de las ventajas que tengo.", "Por derribar al oponente y que caiga en posición supina.", "Por inmovilización.", "Todas las anteriores."],
+        correct: 3,
+        rationale: "La victoria puede lograrse acumulando más ventajas técnicas, proyectando limpiamente de espalda (Ippon) o inmovilizando en el suelo."
+    },
+    {
+        question: "20.- ¿Cuándo se debe señalar inmovilización?:",
+        image: null,
+        options: ["Cuando un judoka está controlado por su adversario y tiene su espalda y sus hombros en contacto con el tatami.", "Sólo si tiene espalda apoyada.", "Desde que tenga un hombro apoyado", "Todas las anteriores"],
+        correct: 0,
+        rationale: "Esta es la descripción técnica exacta del Osaekomi, requiriendo control y fijación de la espalda y hombros sobre el tapiz."
+    },
+    {
+        question: "21.- La victoria por Ippon antes del tiempo reglamentario se puede obtener:",
+        image: null,
+        options: ["Por una proyección ejecutada con fuerza, rapidez y que el oponente caiga claramente sobre su espalda en el tatami", "Por inmovilización durante 20\"", "Por abandono como consecuencia de una luxación o una estrangulación.", "Todas las anteriores."],
+        correct: 3,
+        rationale: "El combate concluye de forma inmediata con Ippon por una proyección perfecta, 20 segundos de retención o sumisión por luxación/estrangulación."
+    },
+    {
+        question: "22.- Los aspectos por los que se aplican las sanciones están relacionados con:",
+        image: null,
+        options: ["Mala utilización del espacio y falta de combatividad.", "Poner en peligro la integridad física del adversario o la nuestra y por mala utilización del Judogui.", "Ninguna de las anteriores", "A y B son correctas."],
+        correct: 3,
+        rationale: "El reglamento de faltas penaliza de forma global tanto la pasividad y uso del espacio como las actitudes lesivas o desajustes de la vestimenta."
+    },
+    {
+        question: "23.- Señala una finalidad del sistema de penalizaciones:",
+        image: null,
+        options: ["Dinamizar la interacción.", "Que los judokas mejoren en su condición física.", "Que la ejecución técnica sea perfecta.", "Todas las anteriores."],
+        correct: 0,
+        rationale: "El objetivo principal del sistema de amonestaciones (Shidos) es evitar la pasividad y dinamizar continuamente las acciones tácticas."
+    }
 ];
 
-let currentQuestion = 0;
-let score = 0;
-let answeredQuestions = {};
+let currentQuestionIndex = 0;
 
-const questionEl = document.getElementById("question");
-const answersEl = document.getElementById("answers");
-const scoreEl = document.getElementById("score");
-const questionCounter = document.getElementById("questionCounter");
-const progressBar = document.getElementById("progressBar");
+function renderQuiz() {
+    const quizContainer = document.getElementById('quiz');
+    quizContainer.innerHTML = '';
 
-function loadQuestion(){
+    quizData.forEach((q, index) => {
+        const block = document.createElement('div');
+        block.className = `question-block ${index === 0 ? 'active' : ''}`;
+        block.id = `q-${index}`;
 
-const q = questions[currentQuestion];
+        let imageHtml = '';
+        if (q.image) {
+            imageHtml = `<div class="image-container"><img src="${q.image}" alt="Imagen del Árbitro de Judo"></div>`;
+        }
 
-questionCounter.innerHTML =
-"Pregunta " + (currentQuestion + 1) +
-" de " + questions.length;
+        let optionsHtml = '';
+        q.options.forEach((opt, optIndex) => {
+            optionsHtml += `<li class="option-item" onclick="checkAnswer(${index}, ${optIndex}, this)">${opt}</li>`;
+        });
 
-progressBar.style.width =
-((currentQuestion + 1) / questions.length) * 100 + "%";
-
-questionEl.innerHTML = q.question;
-
-answersEl.innerHTML = "";
-
-for(let i=0;i<q.answers.length;i++){
-
-const btn = document.createElement("button");
-
-btn.className = "answer-btn";
-
-btn.innerHTML = q.answers[i];
-
-btn.onclick = function(){
-selectAnswer(i,btn);
-};
-
-if(answeredQuestions[currentQuestion] !== undefined){
-
-btn.disabled = true;
-
-if(i === q.correct){
-btn.classList.add("correct");
+        block.innerHTML = `
+            <div class="question-text">${q.question}</div>
+            ${imageHtml}
+            <ul class="options-list">${optionsHtml}</ul>
+            <div class="rationale" id="rationale-${index}">${q.rationale}</div>
+        `;
+        quizContainer.appendChild(block);
+    });
 }
 
-if(i === answeredQuestions[currentQuestion] &&
-i !== q.correct){
-btn.classList.add("wrong");
+function checkAnswer(qIndex, selectedOptIndex, element) {
+    const q = quizData[qIndex];
+    const parent = element.parentElement;
+    
+    if (parent.querySelector('.correct') || parent.querySelector('.wrong')) return;
+
+    const items = parent.querySelectorAll('.option-item');
+    if (selectedOptIndex === q.correct) {
+        element.classList.add('correct');
+    } else {
+        element.classList.add('wrong');
+        items[q.correct].classList.add('correct');
+    }
+
+    const rationaleBox = document.getElementById(`rationale-${qIndex}`);
+    rationaleBox.style.display = 'block';
 }
 
+function changeQuestion(direction) {
+    const currentBlock = document.getElementById(`q-${currentQuestionIndex}`);
+    currentBlock.classList.remove('active');
+
+    currentQuestionIndex += direction;
+
+    const nextBlock = document.getElementById(`q-${currentQuestionIndex}`);
+    nextBlock.classList.add('active');
+
+    document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+    document.getElementById('nextBtn').disabled = currentQuestionIndex === quizData.length - 1;
 }
 
-answersEl.appendChild(btn);
-
-}
-
-}
-
-function selectAnswer(index,button){
-
-if(answeredQuestions[currentQuestion] !== undefined){
-return;
-}
-
-answeredQuestions[currentQuestion] = index;
-
-const q = questions[currentQuestion];
-
-const buttons =
-document.querySelectorAll(".answer-btn");
-
-buttons.forEach((btn,i)=>{
-
-btn.disabled = true;
-
-if(i === q.correct){
-btn.classList.add("correct");
-}
-
-});
-
-if(index === q.correct){
-
-score++;
-scoreEl.innerHTML = score;
-
-}else{
-
-button.classList.add("wrong");
-
-}
-
-}
-
-document.getElementById("nextBtn").onclick = function(){
-
-if(currentQuestion < questions.length - 1){
-
-currentQuestion++;
-
-loadQuestion();
-
-}else{
-
-showResult();
-
-}
-
-};
-
-document.getElementById("prevBtn").onclick = function(){
-
-if(currentQuestion > 0){
-
-currentQuestion--;
-
-loadQuestion();
-
-}
-
-};
-
-function showResult(){
-
-document.getElementById("quizBox")
-.classList.add("hidden");
-
-document.getElementById("result")
-.classList.remove("hidden");
-
-document.getElementById("finalScore")
-.innerHTML =
-"Has acertado " +
-score +
-" de " +
-questions.length +
-" preguntas 💖";
-
-}
-
-function restartQuiz(){
-
-currentQuestion = 0;
-score = 0;
-answeredQuestions = {};
-
-scoreEl.innerHTML = 0;
-
-document.getElementById("result")
-.classList.add("hidden");
-
-document.getElementById("quizBox")
-.classList.remove("hidden");
-
-loadQuestion();
-
-}
-
-loadQuestion();
-
+renderQuiz();
 </script>
 
 </body>
