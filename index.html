@@ -108,21 +108,72 @@
             background-color: #cccccc;
             cursor: not-allowed;
         }
+        
+        /* Estilos de la pantalla de resultados */
+        .results-container {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .score-circle {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2c3e50;
+        }
+        .stats-list {
+            list-style: none;
+            padding: 0;
+            max-width: 300px;
+            margin: 20px auto;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+        .stats-list li {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .stat-correct { background-color: #d4edda; color: #155724; }
+        .stat-wrong { background-color: #f8d7da; color: #721c24; }
+        .stat-unanswered { background-color: #fff3cd; color: #856404; }
+        
+        .restart-btn {
+            background-color: #28a745;
+            margin-top: 20px;
+        }
+        .restart-btn:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>Test: Reglamento de Judo II</h1>
-    <div id="quiz" class="quiz-container"></div>
-    <div class="controls">
-        <button id="prevBtn" onclick="changeQuestion(-1)" disabled>Anterior</button>
-        <button id="nextBtn" onclick="changeQuestion(1)">Siguiente</button>
+    
+    <div id="quiz-wrapper">
+        <div id="quiz" class="quiz-container"></div>
+        <div class="controls">
+            <button id="prevBtn" onclick="changeQuestion(-1)" disabled>Anterior</button>
+            <button id="nextBtn" onclick="changeQuestion(1)">Siguiente</button>
+        </div>
+    </div>
+
+    <div id="results" class="results-container">
+        <h2>Resultados de la Autoevaluación</h2>
+        <div class="score-circle" id="scoreDisplay">0 / 23</div>
+        <p id="feedbackMessage" style="font-size: 1.2rem; font-weight: bold;"></p>
+        <ul class="stats-list">
+            <li class="stat-correct">Preguntas acertadas: <span id="correctCount">0</span></li>
+            <li class="stat-wrong">Preguntas falladas: <span id="wrongCount">0</span></li>
+            <li class="stat-unanswered">Sin responder: <span id="unansweredCount">0</span></li>
+        </ul>
+        <button class="restart-btn" onclick="restartQuiz()">Reiniciar Test</button>
     </div>
 </div>
 
 <script>
-// Rutas actualizadas a la raíz (al mismo nivel que index.html)
 const quizData = [
     {
         question: "1.- ¿Qué señala este árbitro?",
@@ -288,6 +339,9 @@ const quizData = [
 ];
 
 let currentQuestionIndex = 0;
+// Array para almacenar qué ha respondido el usuario en cada pregunta:
+// null = sin responder, true = correcto, false = incorrecto
+let userAnswers = new Array(quizData.length).fill(null); 
 
 function renderQuiz() {
     const quizContainer = document.getElementById('quiz');
@@ -316,20 +370,24 @@ function renderQuiz() {
         `;
         quizContainer.appendChild(block);
     });
+    updateControls();
 }
 
 function checkAnswer(qIndex, selectedOptIndex, element) {
     const q = quizData[qIndex];
     const parent = element.parentElement;
     
-    if (parent.querySelector('.correct') || parent.querySelector('.wrong')) return;
+    // Si ya ha respondido a esta pregunta, no hacer nada
+    if (userAnswers[qIndex] !== null) return;
 
     const items = parent.querySelectorAll('.option-item');
     if (selectedOptIndex === q.correct) {
         element.classList.add('correct');
+        userAnswers[qIndex] = true;
     } else {
         element.classList.add('wrong');
         items[q.correct].classList.add('correct');
+        userAnswers[qIndex] = false;
     }
 
     const rationaleBox = document.getElementById(`rationale-${qIndex}`);
@@ -337,6 +395,11 @@ function checkAnswer(qIndex, selectedOptIndex, element) {
 }
 
 function changeQuestion(direction) {
+    if (currentQuestionIndex === quizData.length - 1 && direction === 1) {
+        showResults();
+        return;
+    }
+
     const currentBlock = document.getElementById(`q-${currentQuestionIndex}`);
     currentBlock.classList.remove('active');
 
@@ -345,8 +408,63 @@ function changeQuestion(direction) {
     const nextBlock = document.getElementById(`q-${currentQuestionIndex}`);
     nextBlock.classList.add('active');
 
+    updateControls();
+}
+
+function updateControls() {
     document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
-    document.getElementById('nextBtn').disabled = currentQuestionIndex === quizData.length - 1;
+    
+    const nextBtn = document.getElementById('nextBtn');
+    if (currentQuestionIndex === quizData.length - 1) {
+        nextBtn.innerText = "Ver Resultado";
+        nextBtn.style.backgroundColor = "#28a745";
+    } else {
+        nextBtn.innerText = "Siguiente";
+        nextBtn.style.backgroundColor = "#007bff";
+    }
+}
+
+function showResults() {
+    // Contar las respuestas
+    const correct = userAnswers.filter(ans => ans === true).length;
+    const wrong = userAnswers.filter(ans => ans === false).length;
+    const unanswered = userAnswers.filter(ans => ans === null).length;
+
+    // Ocultar el cuestionario y mostrar los resultados
+    document.getElementById('quiz-wrapper').style.display = 'none';
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.style.display = 'block';
+
+    // Mostrar las estadísticas
+    document.getElementById('scoreDisplay').innerText = `${correct} / ${quizData.length}`;
+    document.getElementById('correctCount').innerText = correct;
+    document.getElementById('wrongCount').innerText = wrong;
+    document.getElementById('unansweredCount').innerText = unanswered;
+
+    // Mensaje de feedback dinámico (Se aprueba con la mitad o más)
+    const feedbackMessage = document.getElementById('feedbackMessage');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    
+    if (correct >= (quizData.length / 2)) {
+        feedbackMessage.innerText = "¡Enhorabuena! Has aprobado el test.";
+        scoreDisplay.style.color = "#28a745"; // Verde
+    } else {
+        feedbackMessage.innerText = "Has suspendido. ¡Sigue repasando el reglamento!";
+        scoreDisplay.style.color = "#dc3545"; // Rojo
+    }
+}
+
+function restartQuiz() {
+    // Resetear variables de estado
+    currentQuestionIndex = 0;
+    userAnswers = new Array(quizData.length).fill(null);
+
+    // Volver a mostrar el cuestionario y ocultar los resultados
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('quiz-wrapper').style.display = 'block';
+
+    // Volver a renderizarlo todo limpio
+    renderQuiz();
 }
 
 renderQuiz();
